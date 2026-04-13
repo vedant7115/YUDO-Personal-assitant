@@ -20,7 +20,7 @@ export function Login() {
     if (error) {
       setErrorMsg(error.message);
     } else {
-      navigate('/dashboard'); // Route to be created later
+      navigate('/app/dashboard');
     }
     setLoading(false);
   };

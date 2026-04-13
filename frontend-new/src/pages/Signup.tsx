@@ -28,8 +28,13 @@ export function Signup() {
     if (error) {
       setErrorMsg(error.message);
     } else {
-      setSuccessMsg('Verification email sent! Please check your inbox.');
-      // navigate('/login'); // We could auto-navigate, but letting them read the success message is better.
+      if (data.session) {
+        // Since Email Confirm is OFF, we have a valid session instantly.
+        navigate('/app/dashboard');
+      } else {
+        // If Email Confirm is ON, display the message.
+        setSuccessMsg('Check your inbox! A verification link has been sent to your email.');
+      }
     }
     setLoading(false);
   };
