@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YUDO – Personal AI Memory &amp; Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#4e0487",
+                    "surface-container-low": "#091328",
+                    "surface-container-highest": "#192540",
+                    "surface-container-high": "#141f38",
+                    "tertiary-fixed": "#65fde6",
+                    "on-secondary-fixed-variant": "#6c31a5",
+                    "surface-tint": "#9fa7ff",
+                    "on-tertiary-container": "#005e54",
+                    "on-tertiary": "#00685c",
+                    "secondary": "#be83fa",
+                    "on-surface": "#dee5ff",
+                    "on-primary-fixed-variant": "#0c1889",
+                    "secondary-fixed-dim": "#dbb4ff",
+                    "secondary-container": "#62259b",
+                    "tertiary-fixed-dim": "#54eed8",
+                    "error-container": "#a70138",
+                    "primary-fixed-dim": "#7f8af6",
+                    "on-error-container": "#ffb2b9",
+                    "error-dim": "#d73357",
+                    "on-tertiary-fixed": "#004a41",
+                    "tertiary-container": "#65fde6",
+                    "background": "#060e20",
+                    "inverse-primary": "#4954bc",
+                    "inverse-on-surface": "#4d556b",
+                    "secondary-dim": "#be83fa",
+                    "on-primary-container": "#000a7b",
+                    "surface-bright": "#1f2b49",
+                    "on-surface-variant": "#a3aac4",
+                    "on-primary": "#101b8b",
+                    "inverse-surface": "#faf8ff",
+                    "primary": "#9fa7ff",
+                    "on-secondary": "#32005b",
+                    "on-background": "#dee5ff",
+                    "tertiary-dim": "#48e5d0",
+                    "surface": "#060e20",
+                    "on-error": "#490013",
+                    "surface-container": "#0f1930",
+                    "primary-fixed": "#8d98ff",
+                    "outline": "#6d758c",
+                    "on-secondary-container": "#e4c4ff",
+                    "surface-dim": "#060e20",
+                    "primary-dim": "#8a95ff",
+                    "outline-variant": "#40485d",
+                    "secondary-fixed": "#e4c6ff",
+                    "primary-container": "#8d98ff",
+                    "error": "#ff6e84",
+                    "tertiary": "#c6fff3",
+                    "surface-variant": "#192540",
+                    "surface-container-lowest": "#000000",
+                    "on-primary-fixed": "#000000",
+                    "on-tertiary-fixed-variant": "#00695e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel {
+            background: rgba(15, 25, 48, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .mesh-gradient {
+            background: radial-gradient(at 0% 0%, #060e20 0px, transparent 50%),
+                        radial-gradient(at 100% 0%, #32005b 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, #101b8b 0px, transparent 50%),
+                        radial-gradient(at 0% 100%, #4e0487 0px, transparent 50%);
+        }
+        .pulse-shadow {
+            box-shadow: 0 0 40px -10px rgba(159, 167, 255, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface selection:bg-primary selection:text-on-primary overflow-x-hidden">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-indigo-950/40 backdrop-blur-3xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(159,167,255,0.1)]">
+<nav class="flex justify-between items-center px-6 md:px-8 py-4 max-w-full font-['Manrope'] tracking-tight">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="memory">memory</span>
+<span class="text-2xl font-bold bg-gradient-to-r from-[#9fa7ff] to-[#be83fa] bg-clip-text text-transparent">YUDO</span>
+</div>
+<div class="hidden md:flex items-center gap-8 text-indigo-200/70">
+<a class="text-white font-semibold hover:bg-white/5 transition-all duration-300 px-3 py-1 rounded-full" href="#">Product</a>
+<a class="hover:bg-white/5 transition-all duration-300 px-3 py-1 rounded-full" href="#">Features</a>
+<a class="hover:bg-white/5 transition-all duration-300 px-3 py-1 rounded-full" href="#">Pricing</a>
+</div>
+<button class="bg-gradient-to-br from-primary to-secondary text-on-primary px-5 py-2 rounded-full font-bold active:scale-95 duration-200 text-sm">Get Access</button>
+</nav>
+</header>
+<main class="relative pt-24">
+<!-- Hero Section -->
+<section class="relative min-h-[795px] flex flex-col items-center justify-center px-6 overflow-hidden">
+<div class="absolute inset-0 mesh-gradient opacity-40 -z-10"></div>
+<!-- Decorative Blobs -->
+<div class="absolute top-1/4 -left-20 w-80 h-80 bg-primary/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/20 blur-[150px] rounded-full"></div>
+<div class="max-w-3xl text-center space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-white/10 text-xs font-bold tracking-widest uppercase text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_#c6fff3]"></span>
+                    Personal Intelligence Evolution
+                </div>
+<h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-on-surface leading-[1.1]">
+                    Your Second Brain Powered by <span class="text-primary italic">AI</span>
+</h1>
+<p class="text-lg md:text-xl text-on-surface-variant max-w-xl mx-auto font-medium leading-relaxed">
+                    Securely store your memories, documents, and goals. Chat with your life data to unlock deep insights and effortless productivity.
+                </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+<button class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-full text-on-primary font-bold text-lg shadow-lg hover:brightness-110 transition-all active:scale-95">
+                        Get Started
+                    </button>
+<button class="w-full sm:w-auto px-8 py-4 glass-panel border border-outline-variant/30 rounded-full text-on-surface font-semibold text-lg hover:bg-surface-bright/50 transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+                        Watch Demo
+                    </button>
+</div>
+</div>
+<!-- Hero Image Preview -->
+<div class="mt-16 w-full max-w-5xl px-4">
+<div class="glass-panel p-2 rounded-xl border border-white/5 shadow-2xl relative overflow-hidden group">
+<img class="rounded-lg w-full object-cover aspect-video opacity-90 grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="futuristic minimal dashboard interface on a sleek laptop screen with purple and indigo neon lighting accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2PNvi8Bp4IVTYFZasWzDrgFNYClXo0MpJG6L7iC7cVMCTJrmVEguNE6v_YrHV4fPKmR3fXGffFLKlFJ9T32J-TCWmwxD97YOFXSsyNQq2cFjIegNUtCaFB4INpQmZLeMulnO5ZaV3TBVvx7jRj3CWSU4P-5WTaCf3OTTZPDLrmKLEIcMaK1ZLlp6ZFka24VBWmfH4QVRbap9qQ3aajMxYgTF1pULmURv3AOsJ_qEe-0gIWrBlCVk7tzQ3bBK4hoBJyvQVcM6rPKs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent"></div>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-24 px-6 max-w-7xl mx-auto">
+<div class="mb-16 text-center space-y-4">
+<h2 class="text-3xl md:text-5xl font-bold text-on-surface">The Celestial Suite</h2>
+<p class="text-on-surface-variant">A unified ecosystem for your digital existence.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+<!-- Large Card -->
+<div class="md:col-span-4 glass-panel p-10 rounded-lg border border-white/5 flex flex-col justify-between group hover:border-primary/20 transition-all duration-500 min-h-[400px]">
+<div class="space-y-6">
+<div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="psychology">psychology</span>
+</div>
+<h3 class="text-3xl font-bold text-on-surface">AI Assistant</h3>
+<p class="text-on-surface-variant text-lg max-w-md">Your personal memory oracle. Ask anything about your past conversations, meetings, or thoughts with semantic search accuracy.</p>
+</div>
+<div class="relative h-40 mt-8 overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover" data-alt="abstract neural network visualization with glowing fiber optic lines in shades of violet and cyan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJwGqHQxtOxgn6rfxj9yZ1BhYMgNVech4Dxh62aBPeuZrP6ojaT2uAzyzO2qQsoQZ-hHg3ECkc7JBbxua8aAxl5nwAxK3Pm0_ynpF7_CjEuQ_Qk9yAAJw3_YOWre9Awp8CYVn4d-2-lWlwOlxql5rdHx7ZhcXKdvjJDYrvPZczST2uCtIheBINiUKCGPqGoCLNEM_AyDV6nbhjsmtkaTbqU-IVO1c7j_Uul53VTeFYo9kE2Vx-T5rt9BQexoNt-E5PD_2LULB3ndE"/>
+</div>
+</div>
+<!-- Tall Card -->
+<div class="md:col-span-2 glass-panel p-8 rounded-lg border border-white/5 flex flex-col items-center text-center justify-center group hover:border-secondary/20 transition-all">
+<div class="w-20 h-20 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mb-8 pulse-shadow">
+<span class="material-symbols-outlined text-4xl" data-icon="shield">shield</span>
+</div>
+<h3 class="text-2xl font-bold text-on-surface mb-4">Document Vault</h3>
+<p class="text-on-surface-variant">Military-grade encryption for your most sensitive files and medical records.</p>
+</div>
+<!-- Square Cards -->
+<div class="md:col-span-2 glass-panel p-8 rounded-lg border border-white/5 group hover:border-tertiary/20 transition-all">
+<span class="material-symbols-outlined text-3xl text-tertiary mb-6" data-icon="timeline">timeline</span>
+<h3 class="text-xl font-bold text-on-surface mb-3">Life Timeline</h3>
+<p class="text-on-surface-variant text-sm">Visualize your growth through a beautifully curated chronological stream of achievements.</p>
+</div>
+<div class="md:col-span-2 glass-panel p-8 rounded-lg border border-white/5 group hover:border-primary/20 transition-all">
+<span class="material-symbols-outlined text-3xl text-primary mb-6" data-icon="assignment_ind">assignment_ind</span>
+<h3 class="text-xl font-bold text-on-surface mb-3">Resume &amp; Portfolio</h3>
+<p class="text-on-surface-variant text-sm">Auto-generate professional assets based on your life's work and data history.</p>
+</div>
+<div class="md:col-span-2 glass-panel p-8 rounded-lg border border-white/5 group hover:border-on-surface/20 transition-all">
+<span class="material-symbols-outlined text-3xl text-on-surface mb-6" data-icon="auto_awesome">auto_awesome</span>
+<h3 class="text-xl font-bold text-on-surface mb-3">Goals Tracking</h3>
+<p class="text-on-surface-variant text-sm">AI-driven coaching to keep you on track with your long-term aspirations.</p>
+</div>
+</div>
+</section>
+<!-- How It Works Section -->
+<section class="py-24 px-6 bg-surface-container-low/30 relative">
+<div class="max-w-5xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="text-3xl md:text-5xl font-bold text-on-surface">Ascend in Three Steps</h2>
+</div>
+<div class="grid md:grid-cols-3 gap-12 relative">
+<!-- Connector line hidden on mobile -->
+<div class="hidden md:block absolute top-24 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent"></div>
+<div class="relative flex flex-col items-center text-center space-y-6">
+<div class="z-10 w-16 h-16 rounded-full bg-surface-container-high border border-primary/40 flex items-center justify-center text-2xl font-bold text-primary glass-panel">1</div>
+<h4 class="text-xl font-bold">Ingest</h4>
+<p class="text-on-surface-variant">Securely connect your email, cloud storage, and calendar in minutes.</p>
+</div>
+<div class="relative flex flex-col items-center text-center space-y-6">
+<div class="z-10 w-16 h-16 rounded-full bg-surface-container-high border border-secondary/40 flex items-center justify-center text-2xl font-bold text-secondary glass-panel">2</div>
+<h4 class="text-xl font-bold">Process</h4>
+<p class="text-on-surface-variant">Our AI maps semantic connections across your disparate data streams.</p>
+</div>
+<div class="relative flex flex-col items-center text-center space-y-6">
+<div class="z-10 w-16 h-16 rounded-full bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-2xl font-bold text-tertiary glass-panel">3</div>
+<h4 class="text-xl font-bold">Interact</h4>
+<p class="text-on-surface-variant">Start chatting. Ask for summaries, draft emails, or plan your next year.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-24 px-6 max-w-6xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-5xl font-bold text-on-surface mb-4">Investment in Yourself</h2>
+<p class="text-on-surface-variant">Choose the layer that fits your cognitive needs.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Tier 1 -->
+<div class="glass-panel p-8 rounded-lg border border-white/5 flex flex-col">
+<h3 class="text-xl font-bold mb-2">Stellar</h3>
+<div class="text-4xl font-extrabold mb-6">$0 <span class="text-sm font-normal text-on-surface-variant">/mo</span></div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span> 2GB Vault Storage
+                        </li>
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span> Basic AI Memory (30 days)
+                        </li>
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span> Core Journaling Tools
+                        </li>
+</ul>
+<button class="w-full py-3 rounded-full border border-outline-variant text-on-surface font-bold hover:bg-surface-bright transition-all">Start Free</button>
+</div>
+<!-- Tier 2 - Featured -->
+<div class="glass-panel p-8 rounded-lg border-2 border-primary/40 relative transform md:-translate-y-4 shadow-2xl flex flex-col bg-surface-container-high/60">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold tracking-tighter uppercase">Most Popular</div>
+<h3 class="text-xl font-bold mb-2">Celestial</h3>
+<div class="text-4xl font-extrabold mb-6">$19 <span class="text-sm font-normal text-on-surface-variant">/mo</span></div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span> 100GB Encrypted Vault
+                        </li>
+<li class="flex items-center gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span> Infinite AI Life Memory
+                        </li>
+<li class="flex items-center gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span> Priority Neural Processing
+                        </li>
+<li class="flex items-center gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span> Portfolio Auto-Builder
+                        </li>
+</ul>
+<button class="w-full py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-on-primary font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all">Get Pro Access</button>
+</div>
+<!-- Tier 3 -->
+<div class="glass-panel p-8 rounded-lg border border-white/5 flex flex-col">
+<h3 class="text-xl font-bold mb-2">Universal</h3>
+<div class="text-4xl font-extrabold mb-6">$49 <span class="text-sm font-normal text-on-surface-variant">/mo</span></div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="check_circle">check_circle</span> 2TB Ultimate Vault
+                        </li>
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="check_circle">check_circle</span> Team/Family Data Sharing
+                        </li>
+<li class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="check_circle">check_circle</span> 24/7 Concierge Support
+                        </li>
+</ul>
+<button class="w-full py-3 rounded-full border border-outline-variant text-on-surface font-bold hover:bg-surface-bright transition-all">Contact Sales</button>
+</div>
+</div>
+</section>
+<!-- Testimonials (Floating Bubbles) -->
+<section class="py-24 px-6 max-w-6xl mx-auto overflow-hidden">
+<h2 class="text-center text-3xl font-bold mb-16">Heard from the Collective</h2>
+<div class="flex flex-wrap justify-center gap-8">
+<div class="glass-panel p-6 rounded-xl border border-white/5 max-w-sm flex flex-col gap-4 items-start shadow-xl animate-pulse-slow">
+<p class="text-on-surface italic leading-relaxed">"YUDO has literally changed how I recall information. It's like having a search engine for my own life."</p>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a professional woman in her 30s with a warm smile and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8ccMUPEjjj3qPLg9FBXoNZYiYCezXgDfPQsdXqQn4ET07BWsSJTxqd1rrrNi-THZlhS9K5Ql0xr2uHOGzlHsKPgRXXVuvuNfjAeHvUxWPwnSev8Rp8wxBIfjtSkyZ96fBL13lyPDJHV63MU0hFrjsKUZhIWDoEu_NlHNGUrb969qRzwX6ak-Do7iQmxqZoEtSe6f-x0XafTUKZT_yfJj4oGRJ-Uis8LM54sR1i0OkieovUIDyAVchyeGWTBYoTzDP1XAjQ1NKzjI"/>
+</div>
+<div>
+<p class="text-sm font-bold">Elena Thorne</p>
+<p class="text-xs text-on-surface-variant">Product Lead</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl border border-white/5 max-w-sm flex flex-col gap-4 items-start shadow-xl md:mt-12">
+<p class="text-on-surface italic leading-relaxed">"The Resume builder alone saved me 10 hours of work. It knew my achievements better than I did."</p>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a young man with glasses and creative aesthetic in soft indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFuIkQv1TwMgGcQ0do16Jw3_LlPyl1fT5jTpU9H4KMzfWa6MzY8fUAd2ShKmw5uQCYbNOuSnbTz308Hu_8TFSRqdYmO-dzt1S65eeVlVXiVOwJEaQwV2XEWcMDcgGEJGcJRvNl169bUgFz8PSkLHaNg3_DrIEcw-4b4VFYL_e1YEB6UXTBge1MPblExSfTAfd5t2mADuyX93tqHKTAzOTT3rt2vyfcfl1WtsY-e80WeW81CwZE5vTG4u7s7pzpdml1JhLtOhj0cgo"/>
+</div>
+<div>
+<p class="text-sm font-bold">Marcus Chen</p>
+<p class="text-xs text-on-surface-variant">Senior Designer</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-24 px-6 text-center">
+<div class="max-w-4xl mx-auto glass-panel p-16 rounded-xl border border-primary/20 relative overflow-hidden group">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 blur-[100px] rounded-full group-hover:bg-primary/30 transition-all duration-700"></div>
+<h2 class="text-4xl md:text-6xl font-bold mb-8 tracking-tighter">Ready to Evolve?</h2>
+<p class="text-on-surface-variant text-xl mb-10 max-w-xl mx-auto">Join 50,000+ humans building their digital legacies on the YUDO platform.</p>
+<button class="px-12 py-5 bg-on-surface text-background font-black rounded-full text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl">
+                    Get Early Access
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer Anchor -->
+<footer class="w-full rounded-t-[2rem] bg-indigo-950/20 backdrop-blur-xl border-t border-white/5 font-['Manrope'] text-sm tracking-wide mt-24">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 md:px-12 py-10 gap-6">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="flex items-center gap-2 font-bold text-indigo-100 text-xl">
+<span class="material-symbols-outlined text-primary" data-icon="memory">memory</span>
+                    YUDO
+                </div>
+<p class="text-indigo-300/50">© 2024 YUDO Celestial Systems. All rights reserved.</p>
+</div>
+<div class="flex gap-8 text-indigo-300/50">
+<a class="hover:text-indigo-200 transition-colors" href="#">Philosophy</a>
+<a class="hover:text-indigo-200 transition-colors" href="#">Security</a>
+<a class="hover:text-indigo-200 transition-colors" href="#">API</a>
+<a class="hover:text-indigo-200 transition-colors" href="#">Status</a>
+</div>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="share">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="alternate_email">alternate_email</span>
+</a>
+</div>
+</div>
+</footer>
+<!-- Mobile Navigation Shell (Bottom Bar) -->
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass-panel rounded-full border border-white/10 p-2 flex justify-around items-center z-50 shadow-2xl">
+<a class="flex flex-col items-center p-2 text-white font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center p-2 text-indigo-300/50" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="text-[10px] mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center p-2 text-indigo-300/50" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-[10px] mt-1">Memory</span>
+</a>
+<a class="flex flex-col items-center p-2 text-indigo-300/50" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] mt-1">Vault</span>
+</a>
+</nav>
+</body></html>

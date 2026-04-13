@@ -1,0 +1,17 @@
+body {
+    background-color: #060e20 !important;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(159, 167, 255, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(190, 131, 250, 0.15) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(159, 167, 255, 0.1) 0px, transparent 50%) !important;
+    min-height: 100vh;
+    color: #dee5ff !important;
+}
+.glass-panel {
+    background: rgba(15, 25, 48, 0.4) !important;
+    backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

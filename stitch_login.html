@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YUDO - Welcome Back</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#283239",
+                        "surface-container": "#172127",
+                        "surface": "#0a151b",
+                        "on-background": "#d9e4ed",
+                        "on-tertiary-container": "#d5ffff",
+                        "surface-container-low": "#131d23",
+                        "surface-container-high": "#212b32",
+                        "on-tertiary-fixed": "#002020",
+                        "inverse-surface": "#d9e4ed",
+                        "secondary-fixed": "#ecdcff",
+                        "secondary-fixed-dim": "#d6baff",
+                        "on-tertiary": "#003738",
+                        "outline-variant": "#4e4350",
+                        "background": "#0a151b",
+                        "on-error": "#690005",
+                        "primary": "#edb1ff",
+                        "outline": "#9a8c9b",
+                        "on-secondary": "#40147a",
+                        "on-secondary-fixed": "#270057",
+                        "on-secondary-container": "#c7a5ff",
+                        "tertiary-container": "#007e80",
+                        "on-tertiary-fixed-variant": "#004f51",
+                        "primary-fixed-dim": "#edb1ff",
+                        "error-container": "#93000a",
+                        "on-primary": "#520070",
+                        "on-primary-container": "#fff3fd",
+                        "on-surface": "#d9e4ed",
+                        "on-primary-fixed": "#320046",
+                        "tertiary-fixed-dim": "#00dce0",
+                        "surface-tint": "#edb1ff",
+                        "surface-container-highest": "#2c363d",
+                        "surface-dim": "#0a151b",
+                        "primary-fixed": "#f9d8ff",
+                        "primary-container": "#9d50bb",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#573092",
+                        "inverse-primary": "#883ca6",
+                        "surface-bright": "#303a42",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#0bfbff",
+                        "on-surface-variant": "#d1c2d2",
+                        "tertiary": "#00dce0",
+                        "surface-variant": "#2c363d",
+                        "surface-container-lowest": "#060f16",
+                        "on-secondary-fixed-variant": "#573092",
+                        "secondary": "#d6baff",
+                        "on-primary-fixed-variant": "#6e208c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .nebula-bg {
+            background: radial-gradient(circle at 20% 30%, rgba(157, 80, 187, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(87, 48, 146, 0.2) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(10, 21, 27, 1) 0%, rgba(6, 15, 22, 1) 100%);
+        }
+        .glass-panel {
+            background: rgba(23, 33, 39, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col overflow-x-hidden nebula-bg">
+<!-- Top Navigation Suppression: Not rendered per the "Destination" rule for Transactional/Login screens -->
+<main class="flex-grow flex items-center justify-center p-6 relative">
+<!-- Background Elements -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute top-1/2 -right-24 w-80 h-80 bg-secondary/10 rounded-full blur-[100px]"></div>
+</div>
+<!-- Login Container -->
+<div class="w-full max-w-md z-10">
+<!-- Brand Anchor -->
+<div class="flex flex-col items-center mb-10">
+<div class="mb-6 h-16 w-16 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shadow-[0_0_30px_rgba(237,177,255,0.3)]">
+<span class="material-symbols-outlined text-on-primary text-3xl" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<h1 class="font-headline text-4xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2">
+                    Welcome Back to YUDO
+                </h1>
+<p class="font-body text-on-surface-variant text-center tracking-wide">
+                    Your personal AI assistant is waiting.
+                </p>
+</div>
+<!-- Glass Card -->
+<div class="glass-panel rounded-xl p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-white/10">
+<form class="space-y-6">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block text-sm font-medium text-on-surface-variant ml-1 font-label">Email Address</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">mail</span>
+</div>
+<input class="w-full bg-surface-container-lowest border-0 ring-1 ring-white/10 rounded-full py-3.5 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/40 focus:bg-surface-container-low transition-all outline-none" placeholder="name@domain.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center ml-1">
+<label class="block text-sm font-medium text-on-surface-variant font-label">Password</label>
+<a class="text-xs text-primary hover:text-white transition-colors" href="#">Forgot?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">lock</span>
+</div>
+<input class="w-full bg-surface-container-lowest border-0 ring-1 ring-white/10 rounded-full py-3.5 pl-12 pr-12 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary/40 focus:bg-surface-container-low transition-all outline-none" placeholder="••••••••" type="password"/>
+<button class="absolute inset-y-0 right-4 flex items-center text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-2 space-y-4">
+<button class="w-full py-4 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-bold tracking-tight shadow-[0_0_20px_rgba(157,80,187,0.4)] hover:shadow-[0_0_30px_rgba(157,80,187,0.6)] active:scale-[0.98] transition-all" type="submit">
+                            Login
+                        </button>
+<div class="relative py-2 flex items-center">
+<div class="flex-grow border-t border-white/5"></div>
+<span class="flex-shrink mx-4 text-[10px] uppercase tracking-widest text-outline-variant font-bold">OR</span>
+<div class="flex-grow border-t border-white/5"></div>
+</div>
+<button class="w-full py-3.5 rounded-full bg-white/5 border border-white/10 text-on-surface font-label font-medium flex items-center justify-center gap-3 hover:bg-white/10 transition-all active:scale-[0.98]" type="button">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                            Continue with Google
+                        </button>
+</div>
+</form>
+<div class="mt-8 text-center">
+<p class="text-sm text-on-surface-variant font-label">
+                        New to the nebula? <a class="text-primary font-semibold hover:underline" href="#">Create an account</a>
+</p>
+</div>
+</div>
+<!-- Footer Meta -->
+<div class="mt-12 flex justify-center gap-6 opacity-40">
+<a class="text-[10px] uppercase tracking-widest hover:opacity-100 transition-opacity" href="#">Privacy</a>
+<a class="text-[10px] uppercase tracking-widest hover:opacity-100 transition-opacity" href="#">Terms</a>
+<a class="text-[10px] uppercase tracking-widest hover:opacity-100 transition-opacity" href="#">Security</a>
+</div>
+</div>
+</main>
+<!-- Content Sections (Login Focused) -->
+<section class="max-w-6xl mx-auto px-6 pb-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Feature 1 -->
+<div class="glass-panel p-6 rounded-lg border border-white/5 space-y-4">
+<div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">security</span>
+</div>
+<h3 class="font-headline font-bold text-on-surface">End-to-End Vault</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Your data is encrypted with military-grade protocols, ensuring your AI interactions remain exclusively yours.</p>
+</div>
+<!-- Feature 2 -->
+<div class="glass-panel p-6 rounded-lg border border-white/5 space-y-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<h3 class="font-headline font-bold text-on-surface">Neural Intelligence</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Powered by the latest LLMs to provide context-aware assistance across all your digital platforms.</p>
+</div>
+<!-- Feature 3 -->
+<div class="glass-panel p-6 rounded-lg border border-white/5 space-y-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">sync</span>
+</div>
+<h3 class="font-headline font-bold text-on-surface">Seamless Context</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">YUDO remembers your preferences and past conversations to evolve alongside your workflow.</p>
+</div>
+</section>
+<!-- Visual Anchor: Nebula Texture Reference -->
+<div class="fixed inset-0 z-[-1] opacity-30">
+<img class="w-full h-full object-cover mix-blend-screen" data-alt="deep space nebula with swirling purple and blue cosmic gas clouds and distant stars in high definition ethereal style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWP9Wv7AxUhHV-0mp7ul5o5aHP2FAcHXmwkXnsUJqBjHI79TswQ2H6Hq1uyX4d7jssv_fhKqGFPyV8YFhrSr8_6h8wtgI6l62MWEnb--JMoAZTFd3Yui7ZI1FRcvC61UeoxNhdmxh-QQzXes7Nw4-980Y-FWwvt7UBRsEZd2E6SHbap9jAxcm9M8Ooq8d1ie9qh69wCgedKLvBCEOgUu4zjVlBCK_879vfbWdRTpxSOOqrsdUw3RSaBexwrM6Fysb_lYFzOBTCYeU"/>
+</div>
+</body></html>

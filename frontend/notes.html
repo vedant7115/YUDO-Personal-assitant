@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YUDO - The Ethereal Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="tailwind-theme.js"></script>
+<link rel="stylesheet" href="style.css">
+  </head>
+<body class=" text-on-surface font-body selection:bg-secondary-container">
+
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col h-full py-6 bg-indigo-950/40 backdrop-blur-2xl border-r border-white/10 shadow-[0_0_60px_rgba(159,167,255,0.1)] z-50">
+<div class="px-8 mb-10">
+<h1 class="text-2xl font-black tracking-tighter bg-gradient-to-br from-[#9fa7ff] to-[#be83fa] bg-clip-text text-transparent">YUDO</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-indigo-400 font-bold mt-1">Celestial Curator</p>
+</div>
+<nav class="flex-1 space-y-1 px-4">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-indigo-200 transition-colors hover:bg-white/5 hover:backdrop-blur-md rounded-full" href="index.html">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span class="font-manrope text-sm tracking-wide">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-indigo-200 transition-colors hover:bg-white/5 hover:backdrop-blur-md rounded-full" href="ai-chat.html">
+<span class="material-symbols-outlined text-xl" data-icon="chat">chat</span>
+<span class="font-manrope text-sm tracking-wide">AI Chat</span>
+</a>
+<!-- Active Navigation -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-indigo-200 transition-colors hover:bg-white/5 hover:backdrop-blur-md rounded-full" href="index.html">
+<span class="material-symbols-outlined text-xl" data-icon="description">description</span>
+<span class="font-manrope text-sm tracking-wide">Documents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-indigo-200 transition-colors hover:bg-white/5 hover:backdrop-blur-md rounded-full" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="lock">lock</span>
+<span class="font-manrope text-sm tracking-wide">Vault</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-[#9fa7ff] to-[#be83fa] text-white rounded-full mx-2 shadow-lg shadow-indigo-500/20 scale-95 active:scale-90 transition-transform duration-200" href="notes.html">
+<span class="material-symbols-outlined text-xl">sticky_note_2</span>
+<span class="font-manrope text-sm tracking-wide">Notes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-indigo-200 transition-colors hover:bg-white/5 hover:backdrop-blur-md rounded-full" href="notes.html">
+<span class="material-symbols-outlined text-xl" data-icon="menu_book">menu_book</span>
+<span class="font-manrope text-sm tracking-wide">Journal</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="glass-panel p-4 rounded-lg bg-white/5 border border-white/10 text-center">
+<p class="text-xs text-on-surface-variant mb-3">Unlimited celestial storage</p>
+<button class="w-full py-2.5 rounded-full bg-gradient-to-br from-[#9fa7ff] to-[#be83fa] text-on-primary text-xs font-bold shadow-lg shadow-primary/20">Upgrade to Pro</button>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-indigo-950/20 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-8">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full glass-panel/30 border-none rounded-full pl-10 pr-4 py-2 text-sm text-on-surface placeholder:text-slate-500 focus:ring-1 focus:ring-indigo-500/50 transition-all" placeholder="Search your celestial files..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-400 hover:text-white cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-white cursor-pointer transition-colors" data-icon="help">help</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-white cursor-pointer transition-colors" data-icon="apps">apps</span>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/20 bg-surface-container-high">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional woman with a soft glow and minimal aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADaiOGRIYLoipjTBvRt2cIS6_wXrmb3iBgJwUAQx8zkeUKSLD0AxNn7DrR8xTEW85XRgT60F3-o9HhbODSozSuwpdAMiAOcxIHd-WrJSHkl8m8-f4w43U0f4VBfiBn-i34vLhIo6j0j2VOGFoqUwv0wUmK0Jjc705m4Ml-EWNb7CTQWWjQ9g_EdB_MLeJnkpe8BwMlpYEy4rTuDqmegVNXJCrCuImDmAoflrKDBDVdLutwyTrcczIXeTP5rQwNfGyLLC1Krt5O-4w"/>
+</div>
+</div>
+</header>
+<main class="pl-64 pt-16 min-h-screen flex flex-col w-full">
+<div class="flex-1 p-8 overflow-y-auto max-w-screen-xl mx-auto w-full">
+<!-- Search & Quick Filters -->
+<section class="space-y-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full h-14 pl-12 pr-4 glass-panel border-none rounded-xl focus:ring-2 focus:ring-primary-container/40 italic placeholder:text-outline-variant text-on-surface shadow-sm" placeholder="Search notes, ideas, or AI tasks..." type="text"/>
+</div>
+<!-- Folder Organization Chips -->
+<div class="flex gap-3 overflow-x-auto no-scrollbar py-2">
+<button class="flex items-center gap-2 px-5 py-2.5 glass-panel text-primary font-medium rounded-full shadow-sm hover:bg-white transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-lg" data-icon="folder_open">folder_open</span>
+                    All Notes
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 glass-panel border-white/5 text-on-surface-variant font-medium rounded-full hover:bg-surface-container-high transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-lg" data-icon="work">work</span>
+                    Work
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 glass-panel border-white/5 text-on-surface-variant font-medium rounded-full hover:bg-surface-container-high transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-lg" data-icon="favorite">favorite</span>
+                    Personal
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 glass-panel border-white/5 text-on-surface-variant font-medium rounded-full hover:bg-surface-container-high transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-lg" data-icon="lightbulb">lightbulb</span>
+                    Ideas
+                </button>
+</div>
+</section>
+<!-- Active Note / Editor View -->
+<section class="glass-panel rounded-xl p-6 shadow-xl shadow-primary/5 space-y-6">
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-xs font-label uppercase tracking-widest text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span>
+                    October 24, 2023 • 2:45 PM
+                </div>
+<input class="w-full text-2xl font-headline font-bold text-on-surface border-none p-0 focus:ring-0 bg-transparent" type="text" value="The Future of decentralized AI networks"/>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-medium">#AI</span>
+<span class="px-3 py-1 bg-primary-container/20 text-primary rounded-full text-xs font-medium">#ProjectX</span>
+<span class="px-3 py-1 bg-tertiary-container/20 text-tertiary rounded-full text-xs font-medium">#Decentralization</span>
+</div>
+<div class="space-y-4">
+<textarea class="w-full border-none p-0 focus:ring-0 text-on-surface leading-relaxed resize-none font-body" rows="8">The convergence of large language models and edge computing suggests a shift toward local, sovereign AI nodes. 
+
+This transformation will redefine personal knowledge management from mere storage to proactive synthesis. We need to consider how YUDO can facilitate the secure transfer of encrypted weights between trusted devices.
+
+Key research areas:
+1. Differential privacy in node communication.
+2. Low-latency synthesis on mobile hardware.
+3. User intent prediction via semantic anchoring.</textarea>
+</div>
+<!-- AI Assistant Toolbar (Keyboard Accessory Style) -->
+<div class="pt-4 border-t border-surface-container flex gap-2 overflow-x-auto no-scrollbar">
+<button class="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary to-secondary text-white rounded-lg text-sm font-semibold shadow-md active:scale-95 transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                    AI Summarize
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-high text-on-surface-variant rounded-lg text-sm font-semibold hover:bg-surface-container-highest transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="task_alt">task_alt</span>
+                    Convert to Tasks
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-high text-on-surface-variant rounded-lg text-sm font-semibold hover:bg-surface-container-highest transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="quiz">quiz</span>
+                    Generate Flashcards
+                </button>
+</div>
+</section>
+<!-- Recent Notes List -->
+<section class="space-y-4">
+<h2 class="text-lg font-headline font-bold text-on-surface px-2">Recent Notes</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Note Card 1 -->
+<div class="group glass-panel border-white/5 p-5 rounded-xl border border-transparent hover:border-primary-container/30 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-on-surface group-hover:text-primary transition-colors">Quarterly Review Prep</h3>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-outline hover:text-primary text-xl" data-icon="edit_square">edit_square</span>
+<span class="material-symbols-outlined text-outline hover:text-error text-xl" data-icon="delete">delete</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 italic">Reflecting on the Q3 milestones and setting ambitious targets for the end of year expansion phase...</p>
+<div class="flex justify-between items-center">
+<span class="text-[10px] font-label text-outline-variant uppercase tracking-tighter">Oct 20 • Work</span>
+<div class="flex gap-1">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+</div>
+</div>
+</div>
+<!-- Note Card 2 -->
+<div class="group glass-panel border-white/5 p-5 rounded-xl border border-transparent hover:border-primary-container/30 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-on-surface group-hover:text-primary transition-colors">Vegan Lasagna Recipe</h3>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-outline hover:text-primary text-xl" data-icon="edit_square">edit_square</span>
+<span class="material-symbols-outlined text-outline hover:text-error text-xl" data-icon="delete">delete</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 italic">Cashew-based bechamel was a total game changer. Next time add more nutritional yeast to the spinach layer...</p>
+<div class="flex justify-between items-center">
+<span class="text-[10px] font-label text-outline-variant uppercase tracking-tighter">Oct 18 • Personal</span>
+<div class="flex gap-1">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FAB: Create New Note -->
+<button class="fixed bottom-28 right-6 w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary text-white shadow-2xl flex items-center justify-center active:scale-90 duration-300 z-[60]">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+
+</body></html>
