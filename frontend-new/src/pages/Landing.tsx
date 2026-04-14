@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FileText, Database, PenTool, ArrowRight, Play, Shield, Zap, Sparkles, Layers, Cpu } from 'lucide-react';
+import { FileText, Database, PenTool, ArrowRight, Play, Shield, Zap, Sparkles, Brain, Cpu, Lock, Globe } from 'lucide-react';
 
-import yudoHead from '../assets/yudo_3d_icon.jpg';
+import finalBg from '../assets/final-bg.png';
+import finalWhyYudo from '../assets/final-why-yudo.png';
+import yudoIconMain from '../assets/yudo-icon-main.webp';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -13,23 +15,17 @@ export function Landing() {
   const container = useRef<HTMLDivElement>(null);
   
   useGSAP(() => {
+    // ---------------------------------------------
+    // INITIAL LOAD ANIMATIONS (HERO)
+    // ---------------------------------------------
     const tl = gsap.timeline();
 
-    // Fade in ambient backgrounds
-    tl.to('.ambient-bg', { opacity: 1, duration: 2, ease: 'power2.inOut' });
+    tl.to('.main-bg-image', { opacity: 1, duration: 2, ease: 'power2.inOut' });
 
-    // Hero Text Stagger
     tl.fromTo('.hero-text', 
       { y: 50, opacity: 0 }, 
       { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out' },
       "-=1.5"
-    );
-
-    // AI Head Entry
-    tl.fromTo('.ai-head-container',
-      { scale: 0.8, opacity: 0, y: 30 },
-      { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' },
-      "-=1"
     );
 
     // Initial Floating Cards Entry
@@ -39,28 +35,9 @@ export function Landing() {
       "-=0.5"
     );
 
-    // Continuous animations
-    gsap.to('.ai-head', {
-      y: -15,
-      rotation: 1,
-      duration: 4,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut'
-    });
-
-    gsap.to('.neon-glow', {
-      scale: 1.05,
-      opacity: 0.6,
-      duration: 3,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut'
-    });
-
     gsap.utils.toArray<HTMLElement>('.floating-card').forEach((card, i) => {
       gsap.to(card, {
-        y: -10 + (i * 3), 
+        y: -15 + (i * 4), 
         duration: 3 + i * 0.5,
         repeat: -1,
         yoyo: true,
@@ -69,27 +46,13 @@ export function Landing() {
       });
     });
 
-    // Scroll Animations for sections
-    gsap.utils.toArray<HTMLElement>('.reveal-section').forEach((section) => {
-      gsap.fromTo(section, 
-        { opacity: 0, y: 50 },
-        { 
-          opacity: 1, 
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-    });
-
-    // Parallax on AI Head when scrolling
-    gsap.to('.ai-head-container', {
-      y: 100,
+    // ---------------------------------------------
+    // SCROLL ANIMATIONS
+    // ---------------------------------------------
+    
+    // User requested: main bg image fades out / becomes transparent as you scroll down
+    gsap.to('.main-bg-image', {
+      opacity: 0,
       ease: 'none',
       scrollTrigger: {
         trigger: '.hero-section',
@@ -99,220 +62,280 @@ export function Landing() {
       }
     });
 
+    gsap.utils.toArray<HTMLElement>('.reveal-section').forEach((section) => {
+      gsap.fromTo(section, 
+        { opacity: 0, y: 50 },
+        { 
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    });
+
+    // Parallax floating elements on hero right side
+    gsap.to('.hero-right-visual', {
+      y: 100,
+      opacity: 0,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.hero-section',
+        start: 'top top',
+        end: 'bottom center',
+        scrub: true
+      }
+    });
+
   }, { scope: container });
 
   return (
-    <div ref={container} className="min-h-screen bg-black text-white overflow-hidden relative font-body selection:bg-primary/30">
+    <div ref={container} className="min-h-screen bg-[#050505] text-white overflow-hidden relative font-body selection:bg-primary/30">
       
-      {/* Background Ambience */}
-      <div className="ambient-bg opacity-0 fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[#020005] z-10" />
-        {/* Subtle noise texture */}
-        <div className="absolute inset-0 opacity-[0.02] z-20 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
-        
-        {/* Top Radial Glow */}
-        <div className="absolute top-[-20%] left-[20%] w-[60%] h-[50%] bg-primary/20 rounded-full blur-[150px] z-10 mix-blend-screen" />
+      {/* ------------------------------------------- */}
+      {/* GLOBAL BACKGROUND - FINAL USER IMAGE */}
+      {/* ------------------------------------------- */}
+      <div className="fixed inset-0 pointer-events-none z-0 bg-[#050505]">
+          {/* Main User Requested Top-Level Texture: Opaque initially, transparent on scroll */}
+          <img 
+             src={finalBg} 
+             alt="YUDO Core Main Background" 
+             className="main-bg-image absolute inset-0 w-full h-full object-cover opacity-0 z-10" 
+          />
+          
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050505]/50 to-[#050505] z-20" />
       </div>
 
-      {/* Glassmorphism Navbar */}
+      {/* ------------------------------------------- */}
+      {/* NAVBAR */}
+      {/* ------------------------------------------- */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-6xl z-50">
-        <div className="glass-panel bg-white/5 backdrop-blur-xl border border-white/10 rounded-full py-3 px-6 lg:px-8 flex items-center justify-between shadow-[0_0_30px_rgba(157,80,187,0.15)]">
+        <div className="glass-panel bg-[#111111]/80 backdrop-blur-3xl border border-white/5 rounded-full py-3 px-6 lg:px-8 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.8)]">
           <div className="flex items-center gap-2">
-            <Sparkles size={20} className="text-secondary" />
-            <span className="font-headline font-bold text-xl tracking-tighter text-white">
-              YUDO
-            </span>
+            <img src={yudoIconMain} alt="YUDO" className="w-6 h-6 object-contain" />
+            <span className="font-headline font-bold text-xl tracking-tighter text-white">YUDO</span>
           </div>
           
-          <div className="hidden md:flex items-center gap-8 text-sm font-label text-white/70">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
+          <div className="hidden md:flex items-center gap-8 text-sm font-label text-white/50 hover:[&>a]:text-white transition-colors">
+            <a href="#why-yudo">Why YUDO</a>
+            <a href="#features">Architecture</a>
+            <a href="#developer">Developer</a>
           </div>
 
           <div className="flex items-center gap-3">
-            <Link to="/login" className="px-5 py-2 rounded-full font-label text-sm text-white/80 hover:text-white transition-colors hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+            <Link to="/login" className="px-5 py-2 rounded-full font-label text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">
               Log In
             </Link>
-            <Link to="/signup" className="px-5 py-2 rounded-full bg-white text-black font-label font-bold text-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+            <Link to="/signup" className="px-5 py-2.5 rounded-full bg-white text-black font-label font-bold text-sm hover:scale-[1.03] transition-transform shadow-[0_0_15px_rgba(255,255,255,0.2)]">
               Get Started
             </Link>
           </div>
         </div>
       </nav>
 
+      {/* ------------------------------------------- */}
       {/* 1. HERO SECTION */}
-      <section className="hero-section relative z-20 min-h-screen container mx-auto px-6 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-0 pt-32 pb-20">
+      {/* ------------------------------------------- */}
+      <section className="hero-section relative z-30 min-h-screen container mx-auto px-6 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-0 pt-20">
         
-        {/* Glowing Horizon Surface at bottom of hero */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150%] h-[300px] bg-gradient-to-t from-primary/20 via-primary/5 to-transparent rounded-t-[100%] blur-[50px] mix-blend-screen pointer-events-none z-0" />
-
         {/* Left Content */}
-        <div className="w-full lg:w-1/2 flex flex-col items-start justify-center lg:pr-12 z-20">
-          <div className="hero-text mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-md shadow-[0_0_20px_rgba(157,80,187,0.2)]">
-            <Zap size={14} className="text-primary" />
-            <span className="font-label text-xs tracking-widest uppercase text-primary font-semibold">
-              Powered by AI
+        <div className="w-full lg:w-1/2 flex flex-col items-start justify-center lg:pr-12 text-left">
+          
+          <div className="hero-text mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-black/40 backdrop-blur-md">
+            <Brain size={14} className="text-white" />
+            <span className="font-label text-xs tracking-widest uppercase text-white font-medium">
+              V1.0 Intelligence Core
             </span>
           </div>
           
-          <h1 className="hero-text font-headline text-6xl md:text-[5.5rem] font-extrabold tracking-tighter mb-6 leading-[1.05]">
-            <span className="text-white">Your Second</span><br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#e0aaff] to-secondary drop-shadow-lg">
+          <h1 className="hero-text font-headline text-6xl md:text-[5.5rem] font-extrabold tracking-tighter mb-4 leading-[1.05]">
+            <span className="text-white drop-shadow-md">Your Second</span><br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500 drop-shadow-lg">
               Brain
             </span>
           </h1>
           
-          <p className="hero-text font-body text-lg md:text-xl text-white/50 mb-10 max-w-md font-light tracking-wide leading-relaxed">
-            Store. Recall. Evolve. A premium intelligence vault that organizes your thoughts and accelerates your potential.
+          <p className="hero-text font-body text-xl md:text-2xl text-white/60 mb-10 max-w-lg font-light tracking-wide leading-relaxed drop-shadow-md bg-black/20 p-2 rounded-lg">
+            Store your life. Recall anything. Instantly.<br />
+            <span className="text-white/40 text-lg">Documents. Memories. Notes. Powered by AI.</span>
           </p>
           
           <div className="hero-text flex flex-col sm:flex-row gap-5 items-center w-full sm:w-auto">
-            <Link to="/signup" className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-white to-gray-200 text-black font-headline font-bold tracking-tight hover:scale-105 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_35px_rgba(255,255,255,0.5)]">
-              Get Started <ArrowRight size={18} />
+            <Link to="/signup" className="w-full sm:w-auto px-9 py-4.5 rounded-full bg-white text-black font-headline font-bold text-base hover:scale-105 transition-all flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+              Get Started Free
             </Link>
             
-            <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/5 border border-white/20 text-white font-headline font-medium hover:bg-white/10 hover:border-white/40 backdrop-blur-md transition-all flex items-center justify-center gap-2 group">
-              <Play size={18} className="text-secondary group-hover:text-primary transition-colors" /> Try Demo
+            <button className="w-full sm:w-auto px-9 py-4.5 rounded-full bg-black/40 border border-white/20 text-white font-headline font-medium hover:bg-white/10 hover:border-white/40 backdrop-blur-md transition-all flex items-center justify-center gap-2">
+              <Play size={18} className="text-white" /> Watch Demo
             </button>
           </div>
         </div>
 
-        {/* Right Content: AI Head */}
-        <div className="w-full lg:w-1/2 h-[50vh] lg:h-full flex items-center justify-center relative ai-head-container z-20">
+        {/* Right Content: Clean minimal floating cards over the new background */}
+        <div className="hero-right-visual w-full lg:w-1/2 h-[50vh] flex items-center justify-center relative">
           
-          {/* Deep Glowing Pulse */}
-          <div className="neon-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] bg-gradient-to-tr from-primary/30 to-secondary/30 rounded-full blur-[100px] md:blur-[140px] z-0 mix-blend-lighten" />
-          
-          <div className="ai-head relative w-full max-w-[550px] aspect-square z-10 flex items-center justify-center">
-            {/* The 3D Render with edge fading */}
-            <img 
-              src={yudoHead} 
-              alt="YUDO Futuristic AI" 
-              className="w-full h-full object-cover mix-blend-lighten"
-              style={{
-                maskImage: 'radial-gradient(circle closest-side, black 65%, transparent 100%)',
-                WebkitMaskImage: 'radial-gradient(circle closest-side, black 65%, transparent 100%)'
-              }}
-            />
-
-            {/* Edge Blackout Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020005] via-transparent to-transparent opacity-90 z-20 pointer-events-none" />
-
-            {/* Glass Card 1 */}
-            <div className="floating-card absolute top-[15%] right-[-5%] md:right-[5%] glass-panel backdrop-blur-2xl border border-white/10 bg-black/50 p-4 rounded-2xl flex items-center gap-3 shadow-[0_8px_32px_0_rgba(157,80,187,0.15)] z-30 group hover:border-white/20 transition-colors cursor-default">
-               <div className="bg-primary/20 p-2.5 rounded-xl text-primary shadow-[0_0_15px_rgba(157,80,187,0.3)]">
-                 <PenTool size={20} />
+          <div className="relative w-full max-w-[500px] aspect-square flex items-center justify-center z-10 scale-90 md:scale-100">
+            
+            <div className="floating-card absolute top-[20%] left-[10%] glass-panel backdrop-blur-2xl border border-white/10 bg-black/70 p-5 rounded-2xl flex items-center gap-4 shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-30 w-64 hover:border-white/30 transition-colors">
+               <div className="bg-white/10 p-3 rounded-xl text-white">
+                 <FileText size={24} />
                </div>
                <div>
-                 <p className="font-headline font-bold text-sm text-white group-hover:text-primary transition-colors">Notes Sync</p>
-                 <p className="font-label text-xs text-white/50">Active</p>
+                 <p className="font-headline font-bold text-sm text-white">Document Vault</p>
+                 <p className="font-label text-xs text-white/50">Stored securely</p>
                </div>
             </div>
 
-            {/* Glass Card 2 */}
-            <div className="floating-card absolute bottom-[30%] left-[-5%] md:left-[0%] glass-panel backdrop-blur-2xl border border-white/10 bg-black/50 p-4 rounded-2xl flex items-center gap-3 shadow-[0_8px_32px_0_rgba(0,255,255,0.1)] z-30 group hover:border-white/20 transition-colors cursor-default">
-               <div className="bg-secondary/20 p-2.5 rounded-xl text-secondary shadow-[0_0_15px_rgba(0,255,255,0.2)]">
-                 <Cpu size={20} />
+            <div className="floating-card absolute top-[40%] right-[5%] glass-panel backdrop-blur-2xl border border-white/10 bg-black/70 p-5 rounded-2xl flex items-center gap-4 shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-30 w-64 hover:border-white/30 transition-colors">
+               <div className="bg-white/10 p-3 rounded-xl text-white">
+                 <PenTool size={24} />
                </div>
                <div>
-                 <p className="font-headline font-bold text-sm text-white group-hover:text-secondary transition-colors">AI Memory</p>
-                 <p className="font-label text-xs text-white/50">Processing</p>
+                 <p className="font-headline font-bold text-sm text-white">Smart Notes</p>
+                 <p className="font-label text-xs text-white/50">Semantic Math Ready</p>
                </div>
             </div>
 
-            {/* Glass Card 3 */}
-            <div className="floating-card absolute bottom-[10%] right-[0%] md:right-[15%] glass-panel backdrop-blur-2xl border border-white/10 bg-black/50 p-4 rounded-2xl flex items-center gap-3 shadow-[0_8px_32px_0_rgba(255,20,147,0.15)] z-30 group hover:border-white/20 transition-colors cursor-default">
-               <div className="bg-tertiary/20 p-2.5 rounded-xl text-tertiary shadow-[0_0_15px_rgba(255,20,147,0.3)]">
-                 <Shield size={20} />
+            <div className="floating-card absolute bottom-[20%] left-[20%] glass-panel backdrop-blur-2xl border border-white/10 bg-black/70 p-5 rounded-2xl flex items-center gap-4 shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-30 w-64 hover:border-white/30 transition-colors">
+               <div className="bg-white/10 p-3 rounded-xl text-white">
+                 <Brain size={24} />
                </div>
                <div>
-                 <p className="font-headline font-bold text-sm text-white group-hover:text-tertiary transition-colors">Vault</p>
-                 <p className="font-label text-xs text-white/50">Secured</p>
+                 <p className="font-headline font-bold text-sm text-white">Neural Memorizer</p>
+                 <p className="font-label text-xs text-white/50">Context Synced</p>
                </div>
             </div>
-
+            
           </div>
         </div>
       </section>
 
-      {/* 2. FEATURES SECTION */}
-      <section id="features" className="relative z-20 py-24 container mx-auto px-6">
+      {/* ------------------------------------------- */}
+      {/* 2. THE 4 PILLARS (DIRECT IMAGE OVERLAY) */}
+      {/* ------------------------------------------- */}
+      <section id="why-yudo" className="relative z-30 py-32 container mx-auto px-6 bg-[#050505]">
         <div className="reveal-section text-center max-w-2xl mx-auto mb-16">
-          <h2 className="font-headline text-4xl md:text-5xl font-bold mb-4 text-white">
-            Beyond a generic workspace
+          <span className="font-label text-xs tracking-widest uppercase text-white/40 mb-2 block">Why YUDO?</span>
+          <h2 className="font-headline text-4xl md:text-5xl font-bold mb-4 text-white tracking-tight">
+            The 4 Core Pillars
           </h2>
-          <p className="text-white/50 font-body text-lg">
-            YUDO integrates seamless orchestration, military-grade security, and neural search to augment your intelligence.
+          <p className="text-white/50 font-body text-xl">
+            Everything about you, organically mapped into the Master Core.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { tag: "Secure", icon: <Shield size={28} />, title: "Titanium Vault", desc: "Your files are encrypted at rest and structured contextually by AI.", color: "text-tertiary", border: "border-tertiary/30", shadow: "shadow-[0_0_30px_rgba(255,20,147,0.1)]" },
-            { tag: "Intelligent", icon: <Zap size={28} />, title: "Neural Link", desc: "Talk directly to your documents. Extract answers instantly without searching.", color: "text-primary", border: "border-primary/30", shadow: "shadow-[0_0_30px_rgba(157,80,187,0.1)]" },
-            { tag: "Organized", icon: <Layers size={28} />, title: "Auto-Structuring", desc: "Throw raw thoughts into the scratchpad. YUDO formats them into actionable insights.", color: "text-secondary", border: "border-secondary/30", shadow: "shadow-[0_0_30px_rgba(0,255,255,0.1)]" }
-          ].map((feat, idx) => (
-            <div key={idx} className="reveal-section glass-panel bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 group">
-              <span className={`text-[10px] uppercase tracking-widest font-bold ${feat.color} mb-6 block`}>{feat.tag}</span>
-              <div className={`w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-white group-hover:${feat.color} group-hover:${feat.border} group-hover:${feat.shadow} transition-all duration-300`}>
-                {feat.icon}
-              </div>
-              <h3 className="text-2xl font-headline font-bold text-white mb-3">{feat.title}</h3>
-              <p className="text-white/50 font-body text-sm leading-relaxed">{feat.desc}</p>
-            </div>
-          ))}
+        {/* Custom Container encapsulating the user's specific 4-panel image */}
+        <div className="relative w-full max-w-6xl mx-auto rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(0,0,0,1)] bg-black reveal-section group">
+           
+           {/* The Image (acts as size driver for the entire grid) */}
+           <img 
+              src={finalWhyYudo} 
+              alt="YUDO Architecture Panels" 
+              className="w-full h-auto object-cover relative z-0 transition-transform duration-1000 group-hover:scale-[1.01]" 
+           />
+           
+           {/* The Overlay Boxes - positioned absolutely via precise percentages into the image's drawn borders */}
+           <div className="absolute inset-0 z-10">
+               
+               {/* Panel 1 Overlay (Top Left) */}
+               <div className="absolute flex flex-col justify-start md:justify-center items-start md:items-center text-left md:text-center p-2 lg:p-4 overflow-hidden" 
+                    style={{ top: '22.8%', left: '9.3%', width: '20.2%', height: '23.2%' }}>
+                  <h3 className="text-[10px] sm:text-sm md:text-lg lg:text-xl font-headline font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50 mb-2 px-3 py-1 border border-white/10 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.05)] backdrop-blur-md">
+                    1. Document Vault
+                  </h3>
+                  <p className="text-white/50 font-body text-[8px] sm:text-[10px] md:text-sm lg:text-sm leading-tight md:leading-relaxed max-w-[90%] font-light">
+                    A secure drop-zone for passwords and unstructured files. YUDO absorbs absolute vectors instantly.
+                  </p>
+               </div>
+
+               {/* Panel 2 Overlay (Bottom Left) */}
+               <div className="absolute flex flex-col justify-start md:justify-center items-start md:items-center text-left md:text-center p-2 lg:p-4 overflow-hidden" 
+                    style={{ top: '46.8%', left: '9.3%', width: '20.2%', height: '23.2%' }}>
+                  <h3 className="text-[10px] sm:text-sm md:text-lg lg:text-xl font-headline font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50 mb-2 px-3 py-1 border border-white/10 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.05)] backdrop-blur-md">
+                    2. YUDO Memorizer
+                  </h3>
+                  <p className="text-white/50 font-body text-[8px] sm:text-[10px] md:text-sm lg:text-sm leading-tight md:leading-relaxed max-w-[90%] font-light">
+                    Your dynamic, ambient memory engine. Brain-dump casual thoughts, and YUDO maps events perfectly.
+                  </p>
+               </div>
+
+               {/* Panel 3 Overlay (Top Right) */}
+               <div className="absolute flex flex-col justify-start md:justify-center items-start md:items-center text-left md:text-center p-2 lg:p-4 overflow-hidden" 
+                    style={{ top: '38.6%', left: '70.5%', width: '20.2%', height: '23.2%' }}>
+                  <h3 className="text-[10px] sm:text-sm md:text-lg lg:text-xl font-headline font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50 mb-2 px-3 py-1 border border-white/10 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.05)] backdrop-blur-md">
+                    3. Effective Semantics
+                  </h3>
+                  <p className="text-white/50 font-body text-[8px] sm:text-[10px] md:text-sm lg:text-sm leading-tight md:leading-relaxed max-w-[90%] font-light">
+                    YUDO grasps meaning and math deep within raw text. Chaotic plans calculate instantly.
+                  </p>
+               </div>
+
+               {/* Panel 4 Overlay (Bottom Right) */}
+               <div className="absolute flex flex-col justify-start md:justify-center items-start md:items-center text-left md:text-center p-2 lg:p-4 overflow-hidden" 
+                    style={{ top: '62.6%', left: '70.5%', width: '20.2%', height: '23.2%' }}>
+                  <h3 className="text-[10px] sm:text-sm md:text-lg lg:text-xl font-headline font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50 mb-2 px-3 py-1 border border-white/10 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.05)] backdrop-blur-md">
+                    4. Unified AI Agent
+                  </h3>
+                  <p className="text-white/50 font-body text-[8px] sm:text-[10px] md:text-sm lg:text-sm leading-tight md:leading-relaxed max-w-[90%] font-light">
+                    The master intelligence. Query logic, life tracking, or deep web through singular chat.
+                  </p>
+               </div>
+               
+           </div>
         </div>
       </section>
 
-      {/* 3. HOW IT WORKS */}
-      <section id="how-it-works" className="relative z-20 py-24 container mx-auto px-6 border-t border-white/5 bg-gradient-to-b from-black to-primary/5">
-        <div className="reveal-section text-center max-w-2xl mx-auto mb-20">
-          <h2 className="font-headline text-4xl md:text-5xl font-bold mb-4">
-            Flows at the speed of thought
-          </h2>
-        </div>
+      {/* ------------------------------------------- */}
+      {/* 3. ABOUT SECTION */}
+      {/* ------------------------------------------- */}
+      <section id="developer" className="relative z-20 py-24 my-12 container mx-auto px-6 bg-[#050505]">
+        <div className="reveal-section relative max-w-5xl mx-auto glass-panel bg-[#0a0a0a] border border-white/5 rounded-3xl p-10 md:p-16 flex flex-col md:flex-row gap-12 items-center overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.5)]">
+           
+           <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full border-2 border-white/10 overflow-hidden relative bg-[#111] shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+              <img src={yudoIconMain} alt="Creator" className="w-full h-full object-cover opacity-60 mix-blend-lighten grayscale px-4" />
+           </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center max-w-5xl mx-auto">
-          {[
-            { step: "01", icon: <Database size={32} />, title: "Ingest Data", desc: "Upload PDFs, type raw notes, or drop links into your secure vault." },
-            { step: "02", icon: <Cpu size={32} />, title: "AI Processing", desc: "Our engine vectorizes and connects your information automatically." },
-            { step: "03", icon: <Sparkles size={32} />, title: "Instant Recall", desc: "Chat with your AI to pull insights identically as if you never forgot them." }
-          ].map((item, idx) => (
-            <div key={idx} className="reveal-section relative flex flex-col items-center">
-              <div className="text-[120px] font-headline font-black text-white/[0.03] absolute -top-16 left-1/2 -translate-x-1/2 select-none z-0">
-                {item.step}
-              </div>
-              <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-primary/20 to-white/5 border border-white/10 flex items-center justify-center text-primary mb-6 z-10 backdrop-blur-md shadow-[0_0_20px_rgba(157,80,187,0.15)]">
-                {item.icon}
-              </div>
-              <h3 className="text-xl font-headline font-bold text-white mb-2 z-10">{item.title}</h3>
-              <p className="text-white/50 font-body text-sm z-10 max-w-[250px]">{item.desc}</p>
-            </div>
-          ))}
+           <div className="flex-1 text-center md:text-left relative z-10">
+             <h3 className="font-headline text-2xl md:text-3xl font-bold mb-4 text-white">
+               Built by a developer who believes memory is power
+             </h3>
+             <p className="font-body text-white/50 text-lg mb-8 leading-relaxed max-w-2xl font-light">
+               I am building YUDO to solve a visceral problem — we constantly lose track of profound information, let relationships slip, and waste hours searching basic files. YUDO is engineered to become your ultimate, highly-secured personal intelligence system.
+             </p>
+             <div className="flex items-center justify-center md:justify-start gap-4">
+                <a href="https://github.com/vedant7115" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+                  <Globe size={18} />
+                </a>
+                <div className="ml-2 pl-4 border-l border-white/10 font-label text-sm text-white/30 uppercase tracking-widest">
+                   Vedant Singh // Architect
+                </div>
+             </div>
+           </div>
         </div>
       </section>
 
-      {/* 4. CTA SECTION */}
-      <section className="relative z-20 py-32 container mx-auto px-6 flex justify-center">
-        <div className="reveal-section relative w-full max-w-4xl glass-panel bg-white/[0.02] border border-white/10 rounded-3xl p-12 md:p-20 text-center overflow-hidden">
-          {/* Inner Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/20 blur-[100px] z-0" />
-          
-          <div className="relative z-10 flex flex-col items-center">
-             <h2 className="font-headline text-4xl md:text-5xl font-bold mb-6 text-white max-w-lg leading-tight">
-               Start building your <span className="text-primary tracking-tight">second brain</span> today.
-             </h2>
-             <p className="text-white/50 mb-10 text-lg">Join the beta and reclaim your cognitive bandwidth.</p>
-             <Link to="/signup" className="px-10 py-5 rounded-full bg-white text-black font-headline font-bold text-lg hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_50px_rgba(255,255,255,0.5)]">
-               Create Free Account
-             </Link>
-          </div>
+      {/* ------------------------------------------- */}
+      {/* 4. FINAL CTA SECTION */}
+      {/* ------------------------------------------- */}
+      <section className="relative z-20 pt-16 pb-32 container mx-auto px-6 bg-[#050505] flex justify-center">
+        <div className="reveal-section relative w-full max-w-4xl rounded-3xl p-[1px] bg-white/10 shadow-[0_0_50px_rgba(255,255,255,0.05)] hover:shadow-[0_0_80px_rgba(255,255,255,0.1)] transition-shadow duration-500">
+           <div className="bg-[#050505] rounded-[23px] p-16 md:p-24 text-center overflow-hidden relative flex flex-col items-center">
+              
+              <h2 className="relative z-10 font-headline text-4xl md:text-5xl font-extrabold mb-10 text-white tracking-tight leading-tight">
+                Start building your <br />second brain today.
+              </h2>
+              <Link to="/signup" className="relative z-10 px-12 py-5 rounded-full bg-white text-black font-headline font-bold text-lg hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                Initialize System
+              </Link>
+           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="relative z-20 border-t border-white/5 bg-black py-10 text-center text-white/30 text-sm font-label">
-        <p>© {new Date().getFullYear()} YUDO AI Orchestration. All rights reserved.</p>
+      <footer className="relative z-20 border-t border-white/5 bg-[#030303] py-12 flex justify-center text-center">
+        <p className="text-white/20 text-xs font-label tracking-widest uppercase">© {new Date().getFullYear()} YUDO. All systems nominal.</p>
       </footer>
 
     </div>
