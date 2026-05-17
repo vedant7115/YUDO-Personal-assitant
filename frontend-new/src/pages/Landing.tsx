@@ -208,7 +208,8 @@ export function Landing() {
           
           <p className="hero-text font-body text-xl md:text-2xl text-white/60 mb-10 max-w-lg font-light tracking-wide leading-relaxed drop-shadow-md bg-black/30 backdrop-blur-sm p-3 rounded-xl border border-white/5">
             Store your life. Recall anything. Instantly.<br />
-            <span className="text-white/40 text-lg">Documents. Memories. Notes. Powered by AI.</span>
+            <span className="text-white/40 text-lg">Documents. Memories. Notes. Powered by AI.</span><br />
+            <span className="text-purple-400/90 font-medium text-lg italic mt-2 block">"It knows more about you than yourself."</span>
           </p>
           
           <div className="hero-text flex flex-col sm:flex-row gap-5 items-center w-full sm:w-auto">

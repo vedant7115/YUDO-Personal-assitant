@@ -1,26 +1,33 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { chatWithAgent } from '../lib/api';
 
 export function Chat() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! I am YUDO, your personal neural assistant. I have access to your vault. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
     
-    // Optimistic append
-    setMessages(prev => [...prev, { role: 'user', content: input }]);
     const currentInput = input;
+    // Optimistic append
+    setMessages(prev => [...prev, { role: 'user', content: currentInput }]);
     setInput('');
+    setLoading(true);
     
-    // Simulate thinking and response
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'assistant', content: `I received your query: "${currentInput}". I am currently running in offline mock mode, but my Fast API connection will process this soon!` }]);
-    }, 1000);
+    try {
+      const response = await chatWithAgent(currentInput);
+      setMessages(prev => [...prev, { role: 'assistant', content: response.answer }]);
+    } catch (error: any) {
+      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${error.message || 'Failed to communicate with YUDO Backend.'}` }]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,10 +67,10 @@ export function Chat() {
            />
            <button 
              type="submit"
-             disabled={!input.trim()}
+             disabled={!input.trim() || loading}
              className="w-12 h-12 rounded-full bg-primary hover:bg-primary/80 disabled:opacity-50 disabled:hover:bg-primary flex items-center justify-center text-on-primary transition-colors text-white"
            >
-              <Send size={18} />
+              {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
            </button>
         </form>
       </div>

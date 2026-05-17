@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Bot, PenTool, LogOut, Settings } from 'lucide-react';
+import { LayoutDashboard, FileText, Bot, PenTool, LogOut, Settings, GitCommit, Target, BookOpen } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export function Layout() {
@@ -13,9 +13,12 @@ export function Layout() {
 
   const navItems = [
     { name: 'Dashboard', path: '/app/dashboard', icon: <LayoutDashboard size={20} /> },
-    { name: 'Documents', path: '/app/documents', icon: <FileText size={20} /> },
     { name: 'AI Chat', path: '/app/chat', icon: <Bot size={20} /> },
+    { name: 'Documents', path: '/app/documents', icon: <FileText size={20} /> },
     { name: 'Notes', path: '/app/notes', icon: <PenTool size={20} /> },
+    { name: 'Timeline', path: '/app/timeline', icon: <GitCommit size={20} /> },
+    { name: 'Goals', path: '/app/goals', icon: <Target size={20} /> },
+    { name: 'Journal', path: '/app/journal', icon: <BookOpen size={20} /> },
   ];
 
   return (

@@ -8,6 +8,9 @@ import { Dashboard } from './pages/Dashboard';
 import { Documents } from './pages/Documents';
 import { Chat } from './pages/Chat';
 import { Notes } from './pages/Notes';
+import { Timeline } from './pages/Timeline';
+import { Goals } from './pages/Goals';
+import { Journal } from './pages/Journal';
 import { supabase } from './lib/supabase';
 
 // Protected Route Wrapper
@@ -31,10 +34,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (loading) {
-    return <div className="min-h-screen nebula-bg flex items-center justify-center text-on-surface">Initializing Secure Vault...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center"
+        style={{ background: '#0a0a0f', color: '#a0aec0', fontFamily: 'Inter, sans-serif' }}>
+        Initializing Secure Vault...
+      </div>
+    );
   }
 
-  // Ensure they are authenticated to access inner routes
   if (!session) {
     return <Navigate to="/login" replace />;
   }
@@ -50,10 +57,10 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        
+
         {/* Protected Dashboard Routes */}
-        <Route 
-          path="/app" 
+        <Route
+          path="/app"
           element={
             <ProtectedRoute>
               <Layout />
@@ -62,12 +69,15 @@ function App() {
         >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="documents" element={<Documents />} />
           <Route path="chat" element={<Chat />} />
+          <Route path="documents" element={<Documents />} />
           <Route path="notes" element={<Notes />} />
+          <Route path="timeline" element={<Timeline />} />
+          <Route path="goals" element={<Goals />} />
+          <Route path="journal" element={<Journal />} />
         </Route>
 
-        {/* Fallbacks */}
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
