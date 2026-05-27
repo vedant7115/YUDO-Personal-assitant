@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, Bot, Shield, Sparkles, RefreshCw } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Bot, Shield, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 

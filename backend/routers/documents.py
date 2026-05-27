@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from services.supabase_client import supabase
 from services.gemini_service import generate_embedding, generate_response
 from middleware.auth import get_current_user
+from utils.text_splitter import split_text
 import pdfplumber
 import io
 import os
@@ -44,20 +45,26 @@ async def upload_document(
         extracted_text = f"File: {file.filename}"
 
     doc_context = context or type or "Uploaded document"
-    final_content = f"Context: {doc_context}\nContent:\n{extracted_text}"
-
-    # Generate embedding
-    embedding = generate_embedding(final_content)
-
-    # Save to DB
-    supabase.table("embeddings").insert({
-        "user_id": user.id,
-        "content": final_content,
-        "embedding": embedding,
-        "source_type": "document",
-        "file_url": file_url,
-        "context": doc_context
-    }).execute()
+    
+    # Split text into chunks to optimize RAG vector search
+    chunks = split_text(extracted_text, chunk_size=1000, chunk_overlap=200) if extracted_text else [f"File: {file.filename}"]
+    
+    # Generate embeddings and bulk insert chunks
+    insert_data = []
+    for i, chunk_text in enumerate(chunks):
+        chunk_content = f"Context: {doc_context}\nChunk {i+1}/{len(chunks)}\nContent:\n{chunk_text}"
+        embedding = generate_embedding(chunk_content)
+        insert_data.append({
+            "user_id": user.id,
+            "content": chunk_content,
+            "embedding": embedding,
+            "source_type": "document",
+            "file_url": file_url,
+            "context": doc_context
+        })
+    
+    if insert_data:
+        supabase.table("embeddings").insert(insert_data).execute()
 
     return {"message": "Document uploaded successfully", "file_url": file_url}
 
@@ -74,9 +81,14 @@ async def list_documents(user=Depends(get_current_user)):
         .execute()
     
     docs = []
+    seen_urls = set()
     for row in response.data or []:
-        # Extract filename from file_url (it looks like .../user.id/timestamp_filename)
         file_url = row.get("file_url", "")
+        if not file_url or file_url in seen_urls:
+            continue
+        seen_urls.add(file_url)
+        
+        # Extract filename from file_url (it looks like .../user.id/timestamp_filename)
         filename = file_url.split("_", 1)[-1] if "_" in file_url.split("/")[-1] else file_url.split("/")[-1]
         
         # Format date

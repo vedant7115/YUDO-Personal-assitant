@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-// Python FastAPI backend
+// FastAPI backend
 const API_BASE_URL = 'http://localhost:8000/api';
 
 async function getAuthHeader() {

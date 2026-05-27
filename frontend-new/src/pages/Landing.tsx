@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FileText, Database, PenTool, ArrowRight, Play, Shield, Zap, Sparkles, Brain, Cpu, Lock, Globe } from 'lucide-react';
+import { FileText, PenTool, Play, Brain, Globe } from 'lucide-react';
 
 import finalBg from '../assets/final-bg.png';
 import finalWhyYudo from '../assets/final-why-yudo.png';
