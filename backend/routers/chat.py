@@ -210,7 +210,8 @@ async def chat(request: ChatRequest, user=Depends(get_current_user)):
         "If the context contains relevant information, use it to answer. "
         "If the context is empty or irrelevant to the query, answer the query as a helpful, friendly AI assistant.\n\n"
         "You also have active tools that allow you to read and write to the user's personal assistant data (Timeline, Notes, Goals, and Journal). "
-        "Use these tools whenever the user asks you to save, list, or schedule things."
+        "Use these tools whenever the user asks you to save, list, or schedule things.\n\n"
+        "IMPORTANT: When calling tools, you must output native tool call structures. Never write XML tags like '<function=...>' or '<tool_call>' in your conversational output."
     )
 
     context_section = f"Context:\n{context_text}\n\n" if context_text.strip() else ""
@@ -223,7 +224,7 @@ async def chat(request: ChatRequest, user=Depends(get_current_user)):
     # 5. Agent Run Loop (Max 5 tool iterations)
     for _ in range(5):
         response = groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             messages=messages,
             tools=tools,
             tool_choice="auto"

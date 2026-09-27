@@ -5,9 +5,17 @@ from fastembed import TextEmbedding
 
 load_dotenv()
 
-# Initialize FastEmbed for Embeddings (Runs locally, 768 dims, replaces Gemini)
-# We use bge-base-en-v1.5 to match the 768 dimensionality previously used by Gemini
-embedding_model = TextEmbedding(model_name="BAAI/bge-base-en-v1.5")
+# Lazy-loaded FastEmbed model
+_embedding_model = None
+
+
+def get_embedding_model():
+    global _embedding_model
+    if _embedding_model is None:
+        # We use bge-base-en-v1.5 to match the 768 dimensionality previously used by Gemini
+        _embedding_model = TextEmbedding(model_name="BAAI/bge-base-en-v1.5")
+    return _embedding_model
+
 
 # Initialize Groq for Generation
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -22,14 +30,15 @@ def generate_embedding(text: str) -> list[float]:
     Generate a 768-dimension embedding using local FastEmbed model.
     Replaces Gemini because of rate limit / credit issues.
     """
-    embeddings = list(embedding_model.embed([text]))
+    model = get_embedding_model()
+    embeddings = list(model.embed([text]))
     # Convert numpy array to list of floats
     return embeddings[0].tolist()
 
 
 def generate_response(query: str, context: str) -> str:
     """
-    Generate a RAG-grounded response using Groq (llama-3.3-70b-versatile).
+    Generate a RAG-grounded response using Groq (openai/gpt-oss-120b).
     """
     system_prompt = (
         "You are YUDO, an advanced personal AI assistant. "
@@ -42,7 +51,7 @@ def generate_response(query: str, context: str) -> str:
     full_prompt = f"{system_prompt}\n\n{context_section}User Query: {query}"
 
     response = groq_client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {"role": "user", "content": full_prompt}
         ]
@@ -52,7 +61,7 @@ def generate_response(query: str, context: str) -> str:
 
 def process_notes(query: str, notes_context: str) -> str:
     """
-    Perform summarization, reasoning, or math based on user notes using Groq.
+    Perform summarization, reasoning, or math based on user notes using Groq (openai/gpt-oss-120b).
     """
     prompt = (
         f"You are YUDO, a personal AI assistant.\n"
@@ -61,7 +70,7 @@ def process_notes(query: str, notes_context: str) -> str:
     )
     
     response = groq_client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {"role": "user", "content": prompt}
         ]
