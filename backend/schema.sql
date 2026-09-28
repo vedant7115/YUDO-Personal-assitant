@@ -8,11 +8,47 @@
 create extension if not exists vector;
 
 -- ============================================================
+-- DOCUMENTS TABLE (File & Upload Management)
+-- ============================================================
+create table if not exists public.documents (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  filename text not null,
+  description text default '',
+  file_url text,
+  size_bytes bigint default 0,
+  mime_type text,
+  status text not null default 'pending' check (status in ('pending', 'processed', 'failed')),
+  error_message text,
+  created_at timestamptz default now() not null
+);
+
+create index if not exists documents_user_created_idx
+  on public.documents (user_id, created_at desc);
+
+alter table public.documents enable row level security;
+
+drop policy if exists "documents_select" on public.documents;
+drop policy if exists "documents_insert" on public.documents;
+drop policy if exists "documents_update" on public.documents;
+drop policy if exists "documents_delete" on public.documents;
+
+create policy "documents_select" on public.documents
+  for select using (auth.uid() = user_id);
+create policy "documents_insert" on public.documents
+  for insert with check (auth.uid() = user_id);
+create policy "documents_update" on public.documents
+  for update using (auth.uid() = user_id);
+create policy "documents_delete" on public.documents
+  for delete using (auth.uid() = user_id);
+
+-- ============================================================
 -- EMBEDDINGS TABLE (Core AI Memory / RAG)
 -- ============================================================
 create table if not exists public.embeddings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete cascade not null,
+  document_id uuid references public.documents(id) on delete cascade,
   content text not null,
   embedding vector(768),
   source_type text not null check (source_type in ('document', 'memory', 'note')),
@@ -26,6 +62,9 @@ create index if not exists embeddings_hnsw_idx
 
 create index if not exists embeddings_user_source_idx
   on public.embeddings (user_id, source_type);
+
+create index if not exists embeddings_document_id_idx
+  on public.embeddings (document_id);
 
 alter table public.embeddings enable row level security;
 
@@ -42,6 +81,7 @@ create policy "embeddings_update" on public.embeddings
   for update using (auth.uid() = user_id);
 create policy "embeddings_delete" on public.embeddings
   for delete using (auth.uid() = user_id);
+
 
 -- ============================================================
 -- match_embeddings FUNCTION (vector similarity search)

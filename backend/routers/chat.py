@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from services.supabase_client import supabase
 from services.gemini_service import generate_embedding, groq_client, GROQ_MODEL
 from services.cost_tracker import log_agent_call
+from services.hybrid_search import hybrid_search, rerank_candidates
 from middleware.auth import get_current_user
 import json
 import time
@@ -187,24 +188,16 @@ async def chat(request: ChatRequest, user=Depends(get_current_user)):
     if not request.query:
         raise HTTPException(status_code=400, detail="Query is required")
 
-    # 1. Convert query to embedding
-    query_embedding = generate_embedding(request.query)
+    # 1. Hybrid Search across all source types (pgvector cosine + keyword full-text via RRF)
+    candidates = await hybrid_search(query=request.query, user_id=user.id, match_count=8)
 
-    # 2. Search across all source types for context
-    result = supabase.rpc("match_embeddings", {
-        "query_embedding": query_embedding,
-        "match_threshold": 0.3,
-        "match_count": 5,
-        "p_user_id": user.id,
-        "p_source_type": None
-    }).execute()
-
-    matches = result.data or []
+    # 2. Re-rank Step using Groq (logged in agent_logs)
+    matches = await rerank_candidates(query=request.query, candidates=candidates, user_id=user.id, top_k=5)
 
     # 3. Build context
     if matches:
         context_text = "\n---\n".join(
-            f"[Source: {m['source_type']}] {m['content']}" for m in matches
+            f"[Source: {m.get('source_type', 'memory')}] {m.get('content', '')}" for m in matches
         )
     else:
         context_text = "No relevant context found in user's data."
