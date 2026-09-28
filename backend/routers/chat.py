@@ -2,10 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from services.supabase_client import supabase
 from services.gemini_service import generate_embedding, groq_client, GROQ_MODEL
+from services.cost_tracker import log_agent_call
 from middleware.auth import get_current_user
 import json
+import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/agent", tags=["Chat"])
+
 
 
 class ChatRequest(BaseModel):
@@ -222,55 +228,104 @@ async def chat(request: ChatRequest, user=Depends(get_current_user)):
     ]
 
     # 5. Agent Run Loop (Max 5 tool iterations)
-    for _ in range(5):
-        response = groq_client.chat.completions.create(
-            model=GROQ_MODEL,
-            messages=messages,
-            tools=tools,
-            tool_choice="auto"
-        )
-        
-        response_message = response.choices[0].message
-        
-        # If model doesn't request tool calling, return its content
-        if not response_message.tool_calls:
-            messages.append({"role": "assistant", "content": response_message.content})
-            break
-
-        # Append assistant's request for tool call
-        tool_calls_list = []
-        for tc in response_message.tool_calls:
-            tool_calls_list.append({
-                "id": tc.id,
-                "type": "function",
-                "function": {
-                    "name": tc.function.name,
-                    "arguments": tc.function.arguments
-                }
-            })
-        
-        messages.append({
-            "role": "assistant",
-            "content": response_message.content or "",
-            "tool_calls": tool_calls_list
-        })
-
-        # Process each tool call
-        for tc in response_message.tool_calls:
-            name = tc.function.name
-            try:
-                args = json.loads(tc.function.arguments)
-            except Exception:
-                args = {}
+    for iteration_idx in range(1, 6):
+        start_time = time.time()
+        try:
+            response = groq_client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=messages,
+                tools=tools,
+                tool_choice="auto"
+            )
+            latency_ms = int((time.time() - start_time) * 1000)
             
-            tool_result = await execute_tool(name, args, user.id)
-            
+            response_message = response.choices[0].message
+            usage = getattr(response, "usage", None)
+            input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
+            output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+
+            tool_calls_list = []
+            tools_called_for_log = []
+            if response_message.tool_calls:
+                for tc in response_message.tool_calls:
+                    try:
+                        args_parsed = json.loads(tc.function.arguments)
+                    except Exception:
+                        args_parsed = tc.function.arguments
+
+                    tools_called_for_log.append({
+                        "name": tc.function.name,
+                        "arguments": args_parsed
+                    })
+                    tool_calls_list.append({
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.function.name,
+                            "arguments": tc.function.arguments
+                        }
+                    })
+
+            # Record per-call agent log (1 row per iteration)
+            await log_agent_call(
+                user_id=user.id,
+                conversation_turn=request.query,
+                iteration=iteration_idx,
+                model=GROQ_MODEL,
+                latency_ms=latency_ms,
+                status="success",
+                tools_called=tools_called_for_log,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens
+            )
+
+            # If model doesn't request tool calling, return its content
+            if not response_message.tool_calls:
+                messages.append({"role": "assistant", "content": response_message.content})
+                break
+
+            # Append assistant's request for tool call
             messages.append({
-                "role": "tool",
-                "tool_call_id": tc.id,
-                "name": name,
-                "content": json.dumps(tool_result)
+                "role": "assistant",
+                "content": response_message.content or "",
+                "tool_calls": tool_calls_list
             })
+
+            # Process each tool call
+            for tc in response_message.tool_calls:
+                name = tc.function.name
+                try:
+                    args = json.loads(tc.function.arguments)
+                except Exception:
+                    args = {}
+                
+                tool_result = await execute_tool(name, args, user.id)
+                
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tc.id,
+                    "name": name,
+                    "content": json.dumps(tool_result)
+                })
+
+        except Exception as groq_err:
+            latency_ms = int((time.time() - start_time) * 1000)
+            await log_agent_call(
+                user_id=user.id,
+                conversation_turn=request.query,
+                iteration=iteration_idx,
+                model=GROQ_MODEL,
+                latency_ms=latency_ms,
+                status="error",
+                error_message=str(groq_err)
+            )
+            logger.warning(f"Groq API error on iteration {iteration_idx}: {groq_err}")
+            if iteration_idx == 1:
+                messages.append({
+                    "role": "assistant",
+                    "content": "I apologize, but I encountered an error communicating with the AI service. Please try your request again."
+                })
+            break
 
     # Retrieve final assistant answer
     answer = "I processed your request."

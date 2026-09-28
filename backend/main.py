@@ -14,6 +14,7 @@ from routers.timeline import router as timeline_router
 from routers.goals import router as goals_router
 from routers.journal import router as journal_router
 from routers.dashboard import router as dashboard_router
+from routers.usage import router as usage_router
 
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(
@@ -41,6 +42,7 @@ app.include_router(timeline_router)
 app.include_router(goals_router)
 app.include_router(journal_router)
 app.include_router(dashboard_router)
+app.include_router(usage_router)
 
 
 # ── Health Check ──────────────────────────────────────────────────────────────
