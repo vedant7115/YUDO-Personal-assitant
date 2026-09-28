@@ -267,6 +267,7 @@ async def chat(request: ChatRequest, user=Depends(get_current_user)):
                     })
 
             # Record per-call agent log (1 row per iteration)
+            logger.info(f"attempting agent_log insert: iteration={iteration_idx}, user={user.id}")
             await log_agent_call(
                 user_id=user.id,
                 conversation_turn=request.query,

@@ -78,4 +78,5 @@ async def log_agent_call(
         # Insert into Supabase agent_logs
         supabase.table("agent_logs").insert(log_payload).execute()
     except Exception as e:
-        logger.warning(f"Failed to write agent_log (safe fallback): {e}")
+        logger.error(f"agent_logs insert failed: {e}", exc_info=True)
+
