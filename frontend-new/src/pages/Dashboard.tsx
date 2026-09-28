@@ -197,11 +197,21 @@ export function Dashboard() {
                    </div>
                    
                    <div className="w-full space-y-3 pt-4">
-                     <button className="w-full px-6 py-4 rounded-2xl bg-gradient-to-r from-primary/20 to-primary/5 border border-primary/30 hover:border-primary/60 hover:from-primary/30 transition-all font-label text-sm text-white flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(237,177,255,0.1)] hover:shadow-[0_0_30px_rgba(237,177,255,0.2)] hover:scale-[1.02]">
-                        <Sparkles size={18} className="text-primary" /> Initiate Deep Scan
+                     <button 
+                       disabled 
+                       title="Deep semantic scanning is in development"
+                       className="w-full px-6 py-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 opacity-60 cursor-not-allowed font-label text-sm text-white/70 flex items-center justify-center gap-3 transition-all"
+                     >
+                        <Sparkles size={18} className="text-primary/70" /> Initiate Deep Scan 
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30 font-semibold tracking-wider uppercase ml-1">Coming soon</span>
                      </button>
-                     <button className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-label text-sm text-white flex items-center justify-center gap-3 hover:border-white/20 hover:scale-[1.02]">
-                        <HardDrive size={18} className="text-secondary" /> Manual Vault Backup
+                     <button 
+                       disabled 
+                       title="Manual vault backup is in development"
+                       className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 opacity-60 cursor-not-allowed font-label text-sm text-white/70 flex items-center justify-center gap-3 transition-all"
+                     >
+                        <HardDrive size={18} className="text-secondary/70" /> Manual Vault Backup 
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary/20 text-secondary border border-secondary/30 font-semibold tracking-wider uppercase ml-1">Coming soon</span>
                      </button>
                    </div>
                 </div>
@@ -210,25 +220,32 @@ export function Dashboard() {
             
             {/* RIGHT AREA: Mini Analytics & Journal */}
             <div className="lg:col-span-3 space-y-8">
-              {/* Analytics Mini Widget */}
+              {/* Analytics Mini Widget (Backed by real database stats) */}
               <div className="gsap-reveal glass-panel p-6 rounded-3xl border border-white/5 shadow-lg group hover:border-white/20 transition-all duration-300">
                 <h3 className="font-headline font-semibold text-sm uppercase tracking-widest text-on-surface-variant mb-4 flex items-center gap-2">
-                  <Zap size={14} className="text-yellow-400" /> Intelligence
+                  <Zap size={14} className="text-yellow-400" /> Vault Overview
                 </h3>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-xs font-label mb-1">
-                      <span className="text-white">AI Retrieval Rate</span>
-                      <span className="text-primary">94%</span>
+                      <span className="text-white">Goal Completion</span>
+                      <span className="text-primary">
+                        {stats?.goals?.total ? Math.round(((stats.goals.completed || 0) / stats.goals.total) * 100) : 0}%
+                      </span>
                     </div>
                     <div className="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-primary to-secondary w-[94%] shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.8)]"></div>
+                      <div 
+                        className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.8)]"
+                        style={{ width: `${stats?.goals?.total ? Math.round(((stats.goals.completed || 0) / stats.goals.total) * 100) : 0}%` }}
+                      ></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-xs font-label mb-1">
-                      <span className="text-white">Vault Indexing</span>
-                      <span className="text-secondary">100%</span>
+                      <span className="text-white">Total Stored Items</span>
+                      <span className="text-secondary font-bold">
+                        {(stats?.documents || 0) + (stats?.notes || 0) + (stats?.memories || 0)} items
+                      </span>
                     </div>
                     <div className="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
                       <div className="h-full bg-secondary w-full shadow-[0_0_10px_rgba(var(--color-secondary-rgb),0.8)]"></div>

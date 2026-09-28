@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from services.supabase_client import supabase
-from services.gemini_service import generate_embedding, groq_client
+from services.gemini_service import generate_embedding, groq_client, GROQ_MODEL
 from middleware.auth import get_current_user
 import json
 
@@ -224,7 +224,7 @@ async def chat(request: ChatRequest, user=Depends(get_current_user)):
     # 5. Agent Run Loop (Max 5 tool iterations)
     for _ in range(5):
         response = groq_client.chat.completions.create(
-            model="openai/gpt-oss-120b",
+            model=GROQ_MODEL,
             messages=messages,
             tools=tools,
             tool_choice="auto"

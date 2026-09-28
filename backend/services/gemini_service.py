@@ -24,6 +24,13 @@ if not GROQ_API_KEY:
 
 groq_client = Groq(api_key=GROQ_API_KEY)
 
+# Configurable Groq Model with startup check
+GROQ_MODEL = os.getenv("GROQ_MODEL")
+if not GROQ_MODEL or not GROQ_MODEL.strip():
+    import logging
+    logging.getLogger("uvicorn.error").error("GROQ_MODEL environment variable is unset or empty! Defaulting to 'openai/gpt-oss-120b'.")
+    GROQ_MODEL = "openai/gpt-oss-120b"
+
 
 def generate_embedding(text: str) -> list[float]:
     """
@@ -38,7 +45,7 @@ def generate_embedding(text: str) -> list[float]:
 
 def generate_response(query: str, context: str) -> str:
     """
-    Generate a RAG-grounded response using Groq (openai/gpt-oss-120b).
+    Generate a RAG-grounded response using Groq (GROQ_MODEL).
     """
     system_prompt = (
         "You are YUDO, an advanced personal AI assistant. "
@@ -51,7 +58,7 @@ def generate_response(query: str, context: str) -> str:
     full_prompt = f"{system_prompt}\n\n{context_section}User Query: {query}"
 
     response = groq_client.chat.completions.create(
-        model="openai/gpt-oss-120b",
+        model=GROQ_MODEL,
         messages=[
             {"role": "user", "content": full_prompt}
         ]
@@ -61,7 +68,7 @@ def generate_response(query: str, context: str) -> str:
 
 def process_notes(query: str, notes_context: str) -> str:
     """
-    Perform summarization, reasoning, or math based on user notes using Groq (openai/gpt-oss-120b).
+    Perform summarization, reasoning, or math based on user notes using Groq (GROQ_MODEL).
     """
     prompt = (
         f"You are YUDO, a personal AI assistant.\n"
@@ -70,9 +77,10 @@ def process_notes(query: str, notes_context: str) -> str:
     )
     
     response = groq_client.chat.completions.create(
-        model="openai/gpt-oss-120b",
+        model=GROQ_MODEL,
         messages=[
             {"role": "user", "content": prompt}
         ]
     )
     return response.choices[0].message.content
+

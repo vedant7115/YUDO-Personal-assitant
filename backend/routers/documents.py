@@ -10,6 +10,22 @@ import os
 router = APIRouter(prefix="/api/documents", tags=["Documents"])
 
 
+def format_file_size(size_bytes: int) -> str:
+    """Format bytes into human-readable string (e.g. 15.1 MB, 420 KB)."""
+    try:
+        size = float(size_bytes)
+    except (ValueError, TypeError):
+        return "Unknown"
+
+    if size <= 0:
+        return "0 B"
+    for unit in ['B', 'KB', 'MB', 'GB']:
+        if size < 1024.0:
+            return f"{size:.1f} {unit}" if unit != 'B' else f"{int(size)} B"
+        size /= 1024.0
+    return f"{size:.1f} TB"
+
+
 @router.post("/upload-document")
 async def upload_document(
     file: UploadFile = File(...),
@@ -22,6 +38,7 @@ async def upload_document(
     generates embeddings, and stores everything for RAG retrieval.
     """
     file_bytes = await file.read()
+    size_bytes = len(file_bytes)
     file_path = f"{user.id}/{int(__import__('time').time())}_{file.filename}"
 
     # Upload to Supabase Storage
@@ -66,13 +83,33 @@ async def upload_document(
     if insert_data:
         supabase.table("embeddings").insert(insert_data).execute()
 
-    return {"message": "Document uploaded successfully", "file_url": file_url}
+    return {
+        "message": "Document uploaded successfully",
+        "file_url": file_url,
+        "size_bytes": size_bytes,
+        "size": format_file_size(size_bytes)
+    }
 
 @router.get("/list-documents")
 async def list_documents(user=Depends(get_current_user)):
     """
-    Retrieve all uploaded documents for the current user.
+    Retrieve all uploaded documents for the current user with real file sizes.
     """
+    # 1. Fetch file metadata from Supabase Storage
+    storage_size_map = {}
+    try:
+        storage_items = supabase.storage.from_("documents").list(path=user.id)
+        for item in storage_items or []:
+            name = item.get("name")
+            meta = item.get("metadata") or {}
+            size = meta.get("size") or meta.get("contentLength") or 0
+            if name:
+                storage_size_map[name] = size
+    except Exception as e:
+        import logging
+        logging.getLogger("uvicorn.error").warning(f"Failed to fetch storage file sizes: {e}")
+
+    # 2. Fetch embeddings records
     response = supabase.table("embeddings") \
         .select("id, file_url, context, created_at") \
         .eq("user_id", user.id) \
@@ -88,8 +125,15 @@ async def list_documents(user=Depends(get_current_user)):
             continue
         seen_urls.add(file_url)
         
-        # Extract filename from file_url (it looks like .../user.id/timestamp_filename)
-        filename = file_url.split("_", 1)[-1] if "_" in file_url.split("/")[-1] else file_url.split("/")[-1]
+        # Extract filename in storage (looks like 1779049471_Team-LogicLegends...)
+        storage_filename = file_url.split("/")[-1]
+        
+        # Human-readable display name
+        display_name = storage_filename.split("_", 1)[-1] if "_" in storage_filename else storage_filename
+        
+        # Real size lookup
+        size_bytes = storage_size_map.get(storage_filename, 0)
+        formatted_size = format_file_size(size_bytes) if size_bytes else "Unknown"
         
         # Format date
         created_at = row.get("created_at", "")
@@ -97,9 +141,10 @@ async def list_documents(user=Depends(get_current_user)):
         
         docs.append({
             "id": row["id"],
-            "name": filename or "Unknown Document",
+            "name": display_name or "Unknown Document",
             "description": row.get("context", ""),
-            "size": "Unknown", # Size isn't stored in embeddings table
+            "size": formatted_size,
+            "size_bytes": size_bytes,
             "date": date_str,
             "url": file_url
         })
