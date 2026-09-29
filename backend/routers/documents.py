@@ -49,19 +49,19 @@ async def upload_document(
     document_id = None
 
     # Step 1: Insert pending record in documents table
-    try:
-        doc_insert = supabase.table("documents").insert({
-            "user_id": user.id,
-            "filename": file.filename,
-            "description": doc_context,
-            "size_bytes": size_bytes,
-            "mime_type": file.content_type,
-            "status": "pending"
-        }).execute()
-        if doc_insert.data:
-            document_id = doc_insert.data[0]["id"]
-    except Exception as e:
-        logger.warning(f"Failed to create pending document entry in documents table: {e}")
+    doc_insert = supabase.table("documents").insert({
+        "user_id": user.id,
+        "filename": file.filename,
+        "description": doc_context,
+        "size_bytes": size_bytes,
+        "mime_type": file.content_type,
+        "status": "pending"
+    }).execute()
+
+    if not doc_insert.data:
+        raise HTTPException(status_code=500, detail="Failed to create document record in documents table")
+
+    document_id = doc_insert.data[0]["id"]
 
     try:
         # Step 2: Upload to Supabase Storage
@@ -99,17 +99,15 @@ async def upload_document(
         for i, chunk_text in enumerate(chunks):
             chunk_content = f"Context: {doc_context}\nChunk {i+1}/{len(chunks)}\nContent:\n{chunk_text}"
             embedding = generate_embedding(chunk_content)
-            record = {
+            insert_data.append({
                 "user_id": user.id,
+                "document_id": document_id,
                 "content": chunk_content,
                 "embedding": embedding,
                 "source_type": "document",
                 "file_url": file_url,
                 "context": doc_context
-            }
-            if document_id:
-                record["document_id"] = document_id
-            insert_data.append(record)
+            })
 
         if insert_data:
             supabase.table("embeddings").insert(insert_data).execute()
